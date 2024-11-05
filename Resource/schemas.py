@@ -12,8 +12,17 @@ class User(BaseModel):
 
 class Resource(BaseModel):
     title: str
-    user_id: int
+
+class ResourceCreate(Resource):
+    pass
 
 class Resource_details(BaseModel):
     resource_id: int
     link: str
+
+class TokenData(BaseModel):
+    id: int
+    name: str
+
+class TokenData(TokenData):
+    pass

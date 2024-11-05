@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta,timezone
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from pydantic import BaseModel
 from sqlalchemy import MetaData
 from starlette import status
@@ -10,7 +10,7 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from hash import async_hash_password, verify_password
-from schemas import User, Token, Resource, Resource_details
+from schemas import User, Token, Resource, Resource_details, TokenData
 
 router = APIRouter(
     prefix='/auth',
@@ -25,14 +25,33 @@ def hash_password(password: str) -> str:
     return async_hash_password(password)
 
 
-def create_access_token(data: dict, secret_key: str =SECRET_KEY) -> str:
+def create_access_token(sub: str):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode = {**data, "exp": expire}
-    return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
+    payload = dict()
+
+    payload["type"] = "bearer"
+    payload["exp"] = expire
+    payload["iat"] = datetime.utcnow()
+    payload["sub"] = str(sub)
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return token
 # bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 # oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
-
+def verify_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+        )
+    except jwt.JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
+    return payload
 @router.on_event("startup")
 def create_table():
     cursor = conn.cursor()
@@ -77,17 +96,26 @@ def register(user: User):
     hashed_password = hash_password(user.password)
     insert_q = "INSERT INTO users(name, email, password) VALUES (%s, %s, %s)"
     cursor.execute(insert_q,(user.name, user.email, hashed_password))
+    payload = {
+                "username": user.name, 
+                "access_token": create_access_token(sub=user.name)
+            }
     conn.commit()
-    return {"msg": "User created successfully"}
+    return payload
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    cursor = conn.cursor()
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
-    token = create_access_token(data={"user_id": user[0], "name": user[1]})
-    return {'access_token': token, 'token_type':'bearer'}
+    return user
+    # data = {
+    #     "access_token": create_access_token(user.name),
+    #     "token_type": "bearer"
+    # }
+
+    # return data
+    
 
 
 def authenticate_user(name : str, password: str):

@@ -6,6 +6,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from db import conn
 import auth 
+import schemas
+import service
+import fastapi
 
 app = FastAPI()
 
@@ -32,3 +35,14 @@ async def user(user: None):
 #     return {"message":"user created successfully"}
 
 #conn.close()
+@app.get("/user/me")
+async def see_user(user: schemas.User = Depends(service.get_current_user)):
+    return user
+
+@app.post("/resource", response_model=schemas.Resource)
+async def create_resource(
+    resource: schemas.ResourceCreate,
+    user: schemas.User = Depends(service.get_current_user)
+):
+   return service.create_resource(user=user,resource=resource) 
+    
