@@ -25,16 +25,11 @@ def hash_password(password: str) -> str:
     return async_hash_password(password)
 
 
-def create_access_token(sub: str):
+def create_access_token(data: dict):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload = dict()
+    to_encode = {**data, "exp": expire}
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-    payload["type"] = "bearer"
-    payload["exp"] = expire
-    payload["iat"] = datetime.utcnow()
-    payload["sub"] = str(sub)
-    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-    return token
 # bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 # oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
@@ -96,25 +91,15 @@ def register(user: User):
     hashed_password = hash_password(user.password)
     insert_q = "INSERT INTO users(name, email, password) VALUES (%s, %s, %s)"
     cursor.execute(insert_q,(user.name, user.email, hashed_password))
-    payload = {
-                "username": user.name, 
-                "access_token": create_access_token(sub=user.name)
-            }
     conn.commit()
-    return payload
-
+    return {'msg': 'user created successfully'}
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
-    return user
-    # data = {
-    #     "access_token": create_access_token(user.name),
-    #     "token_type": "bearer"
-    # }
-
-    # return data
+    access_token = create_access_token(data={"id": user[0], "name": user[1]})
+    return {'access_token': access_token, 'type':'bearer'}
     
 
 
