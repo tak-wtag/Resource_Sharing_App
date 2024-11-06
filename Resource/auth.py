@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta,timezone
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, Request, Cookie
 from pydantic import BaseModel
 from sqlalchemy import MetaData
 from starlette import status
@@ -11,6 +11,9 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from hash import async_hash_password, verify_password
 from schemas import User, Token, Resource, Resource_details, TokenData
+import json
+from sqlalchemy.exc import NoResultFound
+
 
 router = APIRouter(
     prefix='/auth',
@@ -33,20 +36,6 @@ def create_access_token(data: dict):
 # bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 # oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
-def verify_token(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
-        )
-    except jwt.JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-        )
-    return payload
 @router.on_event("startup")
 def create_table():
     cursor = conn.cursor()
@@ -93,14 +82,51 @@ def register(user: User):
     cursor.execute(insert_q,(user.name, user.email, hashed_password))
     conn.commit()
     return {'msg': 'user created successfully'}
-@router.post("/token", response_model=Token)
+@router.post("/token")
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
     access_token = create_access_token(data={"id": user[0], "name": user[1]})
-    return {'access_token': access_token, 'type':'bearer'}
-    
+    return { "access_token": access_token, "type": "bearer"}
+
+
+@router.post("/login", status_code=status.HTTP_200_OK)
+async def login(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+):
+    try:
+        user = authenticate_user(form_data.username, form_data.password)
+        access_token = create_access_token(data={"id": user[0], "name": user[1]})
+        response_content = {"id": user[0], "name": user[1]}
+        response = Response(
+            content=json.dumps(response_content), media_type="application/json"
+        )
+        response.set_cookie(
+            key="token",
+            value=access_token,
+            httponly=True,
+            max_age=1800,
+            samesite="none",
+            secure=True,
+        )
+        return response
+
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to log in: {str(e)}",
+        )
+
+@router.post("/logout", status_code=status.HTTP_200_OK)
+async def logout(response: Response):
+    response.delete_cookie("token")
+    return {"message": "Logged out successfully"}
 
 
 def authenticate_user(name : str, password: str):
@@ -203,3 +229,4 @@ def read_resource_details(id: int):
         return resource
     else:
         return {"msg": "Data not available"}
+

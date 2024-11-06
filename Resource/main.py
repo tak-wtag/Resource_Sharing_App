@@ -9,8 +9,11 @@ import auth
 import schemas
 import service
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+
 
 app.include_router(auth.router)
 
@@ -39,10 +42,13 @@ async def user(user: None):
 async def see_user(user: schemas.User = Depends(service.get_current_user)):
     return user
 
-@app.post("/resource", response_model=schemas.Resource)
+@app.post("/resource")
 async def create_resource(
     resource: schemas.ResourceCreate,
     user: schemas.User = Depends(service.get_current_user)
 ):
-   return service.create_resource(user=user,resource=resource) 
-    
+    cursor = conn.cursor()
+    insert_q = "INSERT INTO resource(title, user_id) VALUES (%s, %s)"
+    resource = cursor.execute(insert_q,(resource.title, user[0], ))
+    conn.commit()
+    return {"msg": "Resource created successfully"}
