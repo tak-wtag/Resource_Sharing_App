@@ -14,30 +14,16 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 
-
 app.include_router(auth.router)
 
-@app.get("/", status_code=status.HTTP_200_OK)
-async def user(user: None):
-    cursor = conn.cursor()
-    if user is None:
-        raise HTTPException(status_code=401, detail='Authentication failed')
-    conn.commit()
-    return {"User": user}
-# @app.post("/register")
-# def register_user(user: schemas.User):
-#     cursor = conn.cursor()
-#     exist_q = "SELECT * from users WHERE email = %s"
-#     cursor.execute(exist_q,(user.email, ))
-#     existing_user = cursor.fetchone()
-#     if existing_user:
-#         raise HTTPException(status_code=400, detail="Email already registered")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins, replace with specific front-end URL later
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-#     encrypted_password =get_hashed_password(user.password)
-#     conn.commit()
-#     return {"message":"user created successfully"}
-
-#conn.close()
 @app.get("/user/me")
 async def see_user(user: schemas.User = Depends(service.get_current_user)):
     return user

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .logout-btn {
+            background-color: #f44336;
+        }
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Resource Management</h2>
+
+        <!-- Buttons -->
+        <button class="button" id="getResourceBtn">Get Resource</button>
+        <button class="button" id="addResourceBtn">Add Resource</button>
+        <button class="button" id="updateResourceBtn">Update Resource</button>
+        <button class="button" id="deleteResourceBtn">Delete Resource</button>
+        <button class="button logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <script>
+        // Base URL for your FastAPI app
+        const BASE_URL = 'http://localhost:8000';  // Change to your FastAPI server URL
+
+        // Get buttons by ID
+        const getResourceBtn = document.getElementById('getResourceBtn');
+        const addResourceBtn = document.getElementById('addResourceBtn');
+        const updateResourceBtn = document.getElementById('updateResourceBtn');
+        const deleteResourceBtn = document.getElementById('deleteResourceBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Add Event Listeners
+        getResourceBtn.addEventListener('click', () => {
+            window.location.href = `all_resource.html`; // Redirect to Get Resource page
+        });
+
+        addResourceBtn.addEventListener('click', () => {
+            window.location.href = `add_resource.html`; // Redirect to Add Resource page
+        });
+
+        updateResourceBtn.addEventListener('click', () => {
+            window.location.href = `${BASE_URL}/resource/update`; // Redirect to Update Resource page
+        });
+
+        deleteResourceBtn.addEventListener('click', () => {
+            window.location.href = `${BASE_URL}/resource/delete`; // Redirect to Delete Resource page
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            await logout();
+        });
+
+        // Function to handle logout
+        async function logout() {
+            try {
+                const response = await fetch(`${BASE_URL}/auth/logout`, {
+                    method: 'POST',
+                });
+                if (response.ok) {
+                    alert('Logged out successfully');
+                    window.location.href = `login.html`; // Redirect to login page after logout
+                } else {
+                    throw new Error('Failed to log out');
+                }
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        }
+    </script>
+
+</body>
+</html>
