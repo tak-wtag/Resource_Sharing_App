@@ -20,6 +20,9 @@ class Resource_details(BaseModel):
     resource_id: int
     link: str
 
+class ResourceDetailsCreate(Resource_details):
+    pass
+
 class TokenData(BaseModel):
     id: int
     name: str

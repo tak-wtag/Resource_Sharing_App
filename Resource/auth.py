@@ -110,7 +110,7 @@ async def login(
             value=access_token,
             httponly=True,
             max_age=1800,
-            samesite="none",
+            samesite="None",
             secure=True,
         )
         return response
@@ -155,54 +155,6 @@ async def read():
         return user
     else:
         return {"msg": "Data not available"}
-
-
-# def create_access_token(name: str, id: str, expires_delta: timedelta):
-#     encode = {'sub': name, 'id': id}
-#     expires = datetime.utcnow() + expires_delta
-#     encode.update({'exp': expires})
-#     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
-
-# @router.post("/resource")
-# def add_resource(resource: Resource):
-#     cursor = conn.cursor()
-#     print(resource.user_id)
-#     exist_q = "SELECT * from users WHERE id = %s"
-#     cursor.execute(exist_q,(resource.user_id, ))
-#     existing_user = cursor.fetchall()
-#     if not existing_user:
-#         raise HTTPException(status_code=400, detail="User is not Authenticated")
-#     insert_q = "INSERT INTO resource(title, user_id) VALUES (%s, %s)"
-#     cursor.execute(insert_q,(resource.title, resource.user_id, ))
-#     conn.commit()
-#     return {"msg": "Resource created successfully"}
-
-# @router.get("/resource")
-# def read_all_resource():
-#     cursor = conn.cursor()
-#     select_q = "SELECT * from resource"
-#     cursor.execute(select_q,)
-#     resource = cursor.fetchall()
-#     conn.commit()
-#     if resource:
-#         resource_list = [
-#             {"id": res[0], "title": res[1], "user_id": res[2], "created_at": res[3]} for res in resource
-#         ]
-#         return resource_list
-#     else:
-#         return {"msg": "Data not available"}
-    
-# @router.get("/resource/id")
-# def read_resource(id: int):
-#     cursor = conn.cursor()
-#     select_q = "SELECT * from resource WHERE id = %s"
-#     cursor.execute(select_q,(id, ))
-#     resource = cursor.fetchall()
-#     conn.commit()
-#     if resource:
-#         return resource
-#     else:
-#         return {"msg": "Data not available"}
 @router.get("/resource/all")
 def read_all_resource():
     cursor = conn.cursor()
@@ -217,14 +169,6 @@ def read_all_resource():
         return resource_list
     else:
         return {"msg": "Data not available"}
-
-# @router.post("/resource_details")
-# def add_resource_details(resource_d: Resource_details):
-#     cursor = conn.cursor()
-#     insert_q = "INSERT INTO resource_details(link, resource_id) VALUES (%s, %s)"
-#     cursor.execute(insert_q,(resource_d.link, resource_d.resource_id, ))
-#     conn.commit()
-#     return {"msg": "Resource created successfully"}
 
 @router.get("/resource_details")
 def read_all_resource_details():
@@ -241,15 +185,3 @@ def read_all_resource_details():
     else:
         return {"msg": "Data not available"}
     
-# @router.get("/resource_details/id")
-# def read_resource_details(id: int):
-#     cursor = conn.cursor()
-#     select_q = "SELECT * from resource_details WHERE resource_id = %s"
-#     cursor.execute(select_q,(id, ))
-#     resource = cursor.fetchall()
-#     conn.commit()
-#     if resource:
-#         return resource
-#     else:
-#         return {"msg": "Data not available"}
-
