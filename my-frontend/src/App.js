@@ -9,6 +9,9 @@ import SignUp from './Components/Signup/Signup';
 import CreateResourceDetails from './Components/AddResourceDetails/AddResourDetails';
 import Logout from './Components/Logout/Logout';
 import UpdateResource from './Components/UpdateResource/UpdateResource';
+import UpdateResourceDetails from './Components/UpdateResourceDetails/UpdateResourceDetails';
+import DeleteResource from './Components/DeleteResource/DeleteResource';
+import DeleteResourceDetails from './Components/DeleteResourceDetails/DeleteResourceDetails';
 
 import './App.css';
 
@@ -27,6 +30,9 @@ function App() {
           <Route path="/add_resource" element={<CreateResourcePage />} />
           <Route path="/add_resource_details" element={<CreateResourceDetails />} />
           <Route path="/update_resource" element={<UpdateResource />} />
+          <Route path="/update_resource_details" element={<UpdateResourceDetails />} />
+          <Route path="/delete_resource" element={<DeleteResource />} />
+          <Route path="/delete_resource_details" element={<DeleteResourceDetails />} />
         </Routes>
       </BrowserRouter>
     </div>

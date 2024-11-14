@@ -68,6 +68,7 @@ def create_table():
         link VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         CONSTRAINT fk_resource_details_users FOREIGN KEY(resource_id) REFERENCES resource(id)
+        ON DELETE CASCADE
     )
     """
     cursor.execute(create_table_query)

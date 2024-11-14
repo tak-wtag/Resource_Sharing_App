@@ -1,48 +1,42 @@
-// CreateResource.js
-
 import React, { useState } from 'react';
-import './AddResource.css'; // Import the CSS file for styling
+import './DeleteResource.css'; // Import the CSS file for styling
 
-const CreateResource = () => {
+const DeleteResource = () => {
     // State hooks for form data, error message, and success message
-    const [title, setTitle] = useState('');
+    const [id, setId] = useState('');  // The id passed in the URL for the resource details
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Form submit handler for creating a resource
+    // Form submit handler for updating a resource
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
 
-        // Validate title field
-        if (!title.trim()) {
-            setErrorMessage('Resource title cannot be empty.');
+        // Validate fields
+        if (!id.trim()) {
+            setErrorMessage('Resource ID cannot be empty.');
             return;
         }
-
-        const resourceData = { title };
-
         try {
-            // Make POST request to the backend to create the resource
-            const response = await fetch('http://localhost:8000/resource', {
-                method: 'POST',
+            // Make PUT request to the backend to update the resource
+            const response = await fetch(`http://localhost:8000/delete_resource/${id}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(resourceData),
                 credentials: 'include', // Include credentials (cookies) in the request
             });
 
             // If response is not OK, handle the error
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.detail || 'Failed to create resource');
+                throw new Error(errorData.detail || 'Failed to update resource');
             }
 
             // Assuming response returns a success message
             const result = await response.json();
-            setSuccessMessage('Resource created successfully!');
+            setSuccessMessage('Resource deleted successfully!');
 
             // Optionally, redirect to the resource list page after a delay
             setTimeout(() => {
@@ -50,27 +44,28 @@ const CreateResource = () => {
             }, 2000);
 
         } catch (error) {
-            setErrorMessage(error.message || 'There was an error creating the resource.');
+            setErrorMessage(error.message || 'There was an error updating the resource.');
         }
     };
 
     return (
         <div className="container">
-            <h2>Create Resource</h2>
+            <h2>Delete Resource</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="title" className="label">Resource Title</label>
+                    <label htmlFor="id" className="label">ID</label>
                     <input 
-                        type="text" 
-                        id="title" 
-                        name="title" 
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)} 
+                        type="number" 
+                        id="id" 
+                        name="id" 
+                        value={id}
+                        onChange={(e) => setId(e.target.value)} 
                         required
                         className="input"
                     />
                 </div>
-                <button type="submit" className="button">Create Resource</button>
+
+                <button type="submit" className="button">Update Resource</button>
             </form>
 
             {/* Error message */}
@@ -82,4 +77,4 @@ const CreateResource = () => {
     );
 };
 
-export default CreateResource;
+export default DeleteResource;

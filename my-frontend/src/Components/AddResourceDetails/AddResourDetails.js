@@ -50,7 +50,7 @@ const CreateResourceDetails = () => {
 
             // Optionally, redirect to the resource list page after a delay
             setTimeout(() => {
-                window.location.href = '/all_resources'; // Redirect to the resource list page
+                window.location.href = '/resource_management'; // Redirect to the resource list page
             }, 2000);
 
         } catch (error) {

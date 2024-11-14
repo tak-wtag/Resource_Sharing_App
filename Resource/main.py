@@ -74,6 +74,57 @@ async def update_resource(
     else:
         return {"msg": "You are not permitted"}
 
+@app.put("/update_resource_details/{id}")
+async def update_resource(
+    id: int,
+    resource_details: schemas.ResourceDetailsCreate,
+    user: schemas.User = Depends(service.get_current_user)
+):
+    cursor = conn.cursor()
+    select_q = "SELECT * FROM resource where id=%s and user_id=%s"
+    cursor.execute(select_q,( resource_details.resource_id, user[0], ))
+    resource_data = cursor.fetchone()
+    if resource_data:
+        insert_q = "UPDATE resource_details SET resource_id = %s, link = %s where id=%s"
+        resource = cursor.execute(insert_q,(resource_details.resource_id, resource_details.link, id,  ))
+        conn.commit()
+        return {"msg": "Resource Details updated successfully"}
+    else:
+        return {"msg": "You are not permitted"}
+
+@app.delete("/delete_resource/{id}")
+def delete(id: int, user: schemas.User = Depends(service.get_current_user)):
+    cursor = conn.cursor()
+    select_q = "SELECT * FROM resource where id=%s and user_id=%s"
+    cursor.execute(select_q,( id, user[0], ))
+    resource_data = cursor.fetchone()
+    if resource_data:
+        delete_q = "DELETE FROM resource WHERE id = %s"
+        resource = cursor.execute(delete_q,(id,  ))
+        conn.commit()
+        return {"msg": "Resource deleted successfully"}
+    else:
+        return {"msg": "You are not permitted"}
+
+@app.delete("/delete_resource_details/{id}")
+def delete(id: int, user: schemas.User = Depends(service.get_current_user)):
+    cursor = conn.cursor()
+    select_q = "SELECT * FROM resource_details where id=%s"
+    cursor.execute(select_q,( id, ))
+    resource_data = cursor.fetchone()
+    if resource_data:
+        selectr_q = "SELECT * FROM resource where id=%s and user_id=%s"
+        cursor.execute(selectr_q,( resource_data[1],user[0] ))
+        resource_data_details = cursor.fetchone()
+        if resource_data_details:
+            delete_q = "DELETE FROM resource_details WHERE id = %s"
+            resource = cursor.execute(delete_q,(id,  ))
+            conn.commit()
+            return {"msg": "Resource deleted successfully"}
+        else:
+            return {"msg": "You are not permitted"}
+    else:
+            return {"msg": "Resource not found"}
 # @app.post("/resource_details")
 # async def create_resource_details(
 #     resource_details: schemas.ResourceDetailsCreate,
@@ -101,11 +152,3 @@ async def update_resource(
 #     #cursor.close()
 #     return {"msg": "Values updated"}
 
-# @user.delete("/user/{id}")
-# def delete(id: int):
-#     cursor = conn.cursor()
-#     delete_q = "DELETE FROM users WHERE id = %s"
-#     cursor.execute(delete_q, (id, ))
-#     conn.commit()
-#     #cursor.close()
-#     return {"msg": "Values deleted"}

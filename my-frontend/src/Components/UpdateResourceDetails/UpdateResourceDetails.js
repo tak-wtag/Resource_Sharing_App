@@ -1,12 +1,11 @@
-// UpdateResource.js
-
 import React, { useState } from 'react';
-import './UpdateResource.css'; // Import the CSS file for styling
+import './UpdateResourceDetails.css'; // Import the CSS file for styling
 
-const UpdateResource = () => {
+const UpdateResourceDetails = () => {
     // State hooks for form data, error message, and success message
-    const [title, setTitle] = useState('');
-    const [Id, setId] = useState('');  // New state for the `id`
+    const [id, setId] = useState('');  // The id passed in the URL for the resource details
+    const [resourceId, setResourceId] = useState('');  // resource_id
+    const [link, setLink] = useState('');  // link
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -17,21 +16,26 @@ const UpdateResource = () => {
         setSuccessMessage('');
 
         // Validate fields
-        if (!title.trim()) {
-            setErrorMessage('Resource title cannot be empty.');
-            return;
-        }
-
-        if (!Id.trim()) {
+        if (!id.trim()) {
             setErrorMessage('Resource ID cannot be empty.');
             return;
         }
 
-        const resourceData = { title };  // Only include title in the payload
+        if (!resourceId.trim()) {
+            setErrorMessage('Resource ID cannot be empty.');
+            return;
+        }
+
+        if (!link.trim()) {
+            setErrorMessage('Link cannot be empty.');
+            return;
+        }
+
+        const resourceData = { resource_id: parseInt(resourceId), link };  // Include resource_id and link
 
         try {
             // Make PUT request to the backend to update the resource
-            const response = await fetch(`http://localhost:8000/update_resource/${Id}`, {
+            const response = await fetch(`http://localhost:8000/update_resource_details/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,12 +69,12 @@ const UpdateResource = () => {
             <h2>Update Resource</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="id" className="label">Resource ID</label>
+                    <label htmlFor="id" className="label">ID</label>
                     <input 
                         type="number" 
                         id="id" 
                         name="id" 
-                        value={Id}
+                        value={id}
                         onChange={(e) => setId(e.target.value)} 
                         required
                         className="input"
@@ -78,13 +82,26 @@ const UpdateResource = () => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="title" className="label">Resource Title</label>
+                    <label htmlFor="resource_id" className="label">Resource ID</label>
+                    <input 
+                        type="number" 
+                        id="resource_id" 
+                        name="resource_id" 
+                        value={resourceId}
+                        onChange={(e) => setResourceId(e.target.value)} 
+                        required
+                        className="input"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="link" className="label">Link</label>
                     <input 
                         type="text" 
-                        id="title" 
-                        name="title" 
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)} 
+                        id="link" 
+                        name="link" 
+                        value={link}
+                        onChange={(e) => setLink(e.target.value)} 
                         required
                         className="input"
                     />
@@ -102,4 +119,4 @@ const UpdateResource = () => {
     );
 };
 
-export default UpdateResource;
+export default UpdateResourceDetails;
