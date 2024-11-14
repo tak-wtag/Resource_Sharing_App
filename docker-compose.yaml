@@ -1,10 +1,36 @@
 version: '3.9'
 
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: my-frontend/Dockerfile.dev
+    working_dir: /app
+    depends_on:
+      - backend
+    restart: on-failure
+    ports:
+      - "3000:3000"
+  backend:
+    build:
+      context: .
+      dockerfile: Resource/Dockerfile.dev
+    working_dir: /code
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=crud_db
+      - DB_PORT=5432
+    ports:
+      - "8000:8000"
   postgres:
     image: postgres:14-alpine
     ports:
-      - 5433:5432
+      - "5433:5432"
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
