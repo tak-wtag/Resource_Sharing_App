@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: resource
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: resource-share-frontend
+          image: joty46/resource_sharing_app-frontend:v1
+          ports:
+            - containerPort: 3000
