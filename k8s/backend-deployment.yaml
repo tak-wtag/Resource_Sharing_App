@@ -14,7 +14,7 @@ spec:
         component: app
     spec:
       containers:
-        - name: resource-share-backend
+        - name: resource-sharing-app-backend
           image: joty46/resource_sharing_app-backend:v1
           ports:
             - containerPort: 8000
