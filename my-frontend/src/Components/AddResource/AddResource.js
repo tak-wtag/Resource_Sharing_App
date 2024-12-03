@@ -25,7 +25,7 @@ const CreateResource = () => {
 
         try {
             // Make POST request to the backend to create the resource
-            const response = await fetch('http://localhost:8000/resource', {
+            const response = await fetch('/resource', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

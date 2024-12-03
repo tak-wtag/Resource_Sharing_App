@@ -9,7 +9,7 @@ const Logout = () => {
   useEffect(() => {
     const handleLogout = async () => {
       try {
-        const response = await fetch('http://localhost:8000/auth/logout', {
+        const response = await fetch('/auth/logout', {
           method: 'POST',
           credentials: 'include', // Ensure cookies are included in the request
         });

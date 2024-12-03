@@ -20,7 +20,7 @@ const DeleteResource = () => {
         }
         try {
             // Make PUT request to the backend to update the resource
-            const response = await fetch(`http://localhost:8000/delete_resource/${id}`, {
+            const response = await fetch(`/delete_resource/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

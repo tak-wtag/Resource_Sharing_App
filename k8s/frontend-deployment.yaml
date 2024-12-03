@@ -15,12 +15,10 @@ spec:
     spec:
       containers:
         - name: resource-sharing-app-frontend
-          image: joty46/resource_sharing_app-frontend:v1
+          image: joty46/resource_sharing_app-frontend:v34
           ports:
             - containerPort: 3000
-      dnsPolicy: "None"
-      dnsConfig:
-        nameservers:
-          - 10.97.167.209 
-        searches:
-          - backend-cluster-ip-service.resource.svc.cluster.local
+          # envFrom:
+          #   - configMapRef: 
+          #       name: frontend-configmap
+      

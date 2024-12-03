@@ -35,7 +35,7 @@ const UpdateResourceDetails = () => {
 
         try {
             // Make PUT request to the backend to update the resource
-            const response = await fetch(`http://localhost:8000/update_resource_details/${id}`, {
+            const response = await fetch(`/update_resource_details/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

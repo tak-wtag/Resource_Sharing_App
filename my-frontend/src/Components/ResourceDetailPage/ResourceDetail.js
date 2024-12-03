@@ -9,7 +9,7 @@ const ResourceListPage = () => {
   // Function to fetch all resources from the backend
   const fetchResources = async () => {
     try {
-      const response = await fetch('http://localhost:8000/auth/resource_details'); // Correct API URL
+      const response = await fetch('/auth/resource_details'); // Correct API URL
       const data = await response.json();
 
       if (data.msg) {

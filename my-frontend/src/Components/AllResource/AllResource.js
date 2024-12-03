@@ -13,7 +13,7 @@ function AllResourcesPage() {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await fetch('http://localhost:8000/auth/resource/all');  // Update with the correct backend URL
+        const response = await fetch('/auth/resource/all');  // Update with the correct backend URL
         const data = await response.json();
 
         if (data.msg) {

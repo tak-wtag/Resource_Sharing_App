@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: resource-sharing-app-backend
-          image: joty46/resource_sharing_app-backend:v1
+          image: joty46/resource_sharing_app-backend:v34
           ports:
             - containerPort: 8000
           envFrom:
