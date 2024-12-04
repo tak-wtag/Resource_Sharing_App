@@ -4,7 +4,7 @@ metadata:
   name: backend-configmap
   namespace: resource
   labels:
-    component: postgres
+    component: app
 data:
   DB_NAME: crud_db
   DB_PORT: '5432'

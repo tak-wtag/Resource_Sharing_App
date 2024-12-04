@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.name }}
+  namespace: resource
+spec:
+  serviceName: {{ .Values.postgres.label }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      component: {{ .Values.postgres.label }}
+  template:
+    metadata:
+      labels:
+        component: {{ .Values.postgres.label }}
+    spec:
+      volumes:
+        - name: {{ .Values.postgres.volume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgres.volume.pvc.name }}
+      containers:
+        - name: {{ .Values.postgres.label }}
+          image: {{ .Values.postgres.container.image }}
+          ports:
+            - containerPort: {{ .Values.postgres.container.port }}
+          volumeMounts:
+            - name: {{ .Values.postgres.volume.name }}
+              mountPath: {{ .Values.postgres.volume.mountPath }}
+              subPath: {{ .Values.postgres.label }}
+          envFrom:
+            - configMapRef: 
+                name: {{ .Values.postgres.config.name }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credential
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credential
+                  key: postgres_password
+

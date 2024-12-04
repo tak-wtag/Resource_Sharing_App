@@ -1,0 +1,21 @@
+api:
+  name: backend-deployment
+  replicaCount: 1
+  label: app
+  container:
+    name: resource-sharing-app-backend
+    image: joty46/resource_sharing_app-backend:v34
+    port: 8000
+  service:
+    name: backend-cluster-ip-service
+    type: ClusterIP
+    port: 8000
+  config:
+    name: backend-configmap
+    data:
+       - key: DB_NAME
+         value: crud_db
+       - key: DB_PORT
+         value: 5432
+       - key: DB_HOST
+         value: db-cluster-ip-service

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.api.config.name }}
+  namespace: resource
+  labels:
+    component: {{ .Values.api.label }}
+data:
+{{- range .Values.api.config.data }}
+  {{ .key }}: {{ .value }}
+{{- end}}  

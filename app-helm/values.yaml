@@ -1,0 +1,13 @@
+app:
+  name: frontend-deployment
+  replicaCount: 1
+  label: web
+  container:
+    name: resource-sharing-app-frontend
+    image: joty46/resource_sharing_app-frontend:v34
+    port: 3000
+  service:
+    name: frontend-node-port
+    type: NodePort
+    port: 3000
+    nodePort: 31000
