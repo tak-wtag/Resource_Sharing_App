@@ -7,5 +7,5 @@ metadata:
     component: {{ .Values.api.label }}
 data:
 {{- range .Values.api.config.data }}
-  {{ .key }}: {{ .value }}
+  {{ .key }}: {{ .value | quote }}
 {{- end}}  

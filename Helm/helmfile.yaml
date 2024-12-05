@@ -1,0 +1,16 @@
+releases:
+  - name: resource-postgres
+    chart: ./postgres
+    values:
+      - ./postgres/values.yaml
+
+  - name: resource-frontend
+    chart: ./app-helm
+    values:
+      - ./app-helm/values.yaml
+
+  - name: resource-backend 
+    chart: ./resource-helm-chart
+    values:
+      - ./resource-helm-chart/values.yaml
+  

@@ -7,5 +7,5 @@ metadata:
     component: {{ .Values.postgres.label }}
 data:
 {{- range .Values.postgres.config.data }}
-  {{ .key }}: {{ .value }}
+  {{ .key }}: {{ .value | quote }}
 {{- end}}  
