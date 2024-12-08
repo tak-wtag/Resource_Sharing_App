@@ -1,0 +1,14 @@
+ingress:
+  name: ingress-service-resource
+  replicaCount: 1
+  class: nginx
+  rules:
+    - http:
+      paths: 
+        - path: /
+          type: Prefix
+          backend:
+            service:
+              name: frontend-cluster-ip-service
+              port:
+                number: 3000

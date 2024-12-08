@@ -13,4 +13,8 @@ releases:
     chart: ./resource-helm-chart
     values:
       - ./resource-helm-chart/values.yaml
+  - name: resource-ingress 
+    chart: ./ingress
+    values:
+      - ./ingress/values.yaml
   
