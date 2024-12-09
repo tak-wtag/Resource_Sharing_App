@@ -22,4 +22,4 @@ api:
        - key: DB_PORT
          value: 5432
        - key: DB_HOST
-         value: db-cluster-ip-service
+         value: db-release-postgresql.resource.svc.cluster.local

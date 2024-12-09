@@ -1,20 +1,29 @@
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+helmBinary: "/usr/local/bin/helm" 
 releases:
-  - name: resource-postgres
-    chart: ./postgres
+  - name: db-release
+    chart: bitnami/postgresql
+    namespace: resource
     values:
-      - ./postgres/values.yaml
+      - ./values.yaml
 
   - name: resource-frontend
     chart: ./app-helm
+    namespace: resource
     values:
       - ./app-helm/values.yaml
 
   - name: resource-backend 
     chart: ./resource-helm-chart
+    namespace: resource
     values:
       - ./resource-helm-chart/values.yaml
   - name: resource-ingress 
     chart: ./ingress
+    namespace: resource
     values:
       - ./ingress/values.yaml
   

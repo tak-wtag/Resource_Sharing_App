@@ -1,0 +1,13 @@
+auth:
+  database: "crud_db"
+  password: "supersecretpassword"
+  username: "postgres"
+  postgrespassword: "supersecretpassword"
+
+persistence:
+  size: 1Gi
+
+volumePermissions:
+  enabled: true
+
+  
