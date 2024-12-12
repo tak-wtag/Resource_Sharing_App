@@ -19,16 +19,29 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Extract metadata (tags, labels) for Docker
-        id: meta
+        id: metafront
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: joty46/resource_sharing_app-frontend
+      - name: Extract metadata (tags, labels) for Docker
+        id: metaback
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: joty46/resource_sharing_app-backend
       
-      - name: Build and push Docker image
+      - name: Build and push Docker Frontend image of the application
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           push: true
           file: my-frontend/Dockerfile.dev
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metafront.outputs.tags }}
+          labels: ${{ steps.metafront.outputs.labels }}
+      - name: Build and push Docker Backend image of the application
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          file: Resource/Dockerfile.dev
+          tags: ${{ steps.metaback.outputs.tags }}
+          labels: ${{ steps.metaback.outputs.labels }}
