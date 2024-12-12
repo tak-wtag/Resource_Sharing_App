@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-node-port
+  namespace: resource
+spec:
+  type: NodePort
+  selector:
+    component: web
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 31000

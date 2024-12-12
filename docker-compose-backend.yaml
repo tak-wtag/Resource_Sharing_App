@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Resource/Dockerfile.dev
+    networks:
+      - my-network
+      - my-network-db
+    working_dir: /code
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=crud_db
+      - DB_PORT=5432
+    ports:
+      - "8000:8000"
+  postgres:
+    image: postgres:14-alpine
+    networks:
+      - my-network-db
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=root
+      - POSTGRES_DB=crud_db
+networks:
+  my-network:
+    driver: bridge
+  my-network-db:
+    driver: bridge

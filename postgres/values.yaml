@@ -1,0 +1,24 @@
+replicaCount: 1
+postgres:
+  name: db-statefulset
+  label: postgres
+  container:
+    image: postgres:14-alpine
+    port: 5432
+  service:
+    name: db-cluster-ip-service
+    type: ClusterIP
+    port: 5432
+  volume:
+    name: postgres-storage
+    kind: PersistentVolumeClaim
+    mountPath: /var/lib/postgresql/data
+    pvc:
+      name: db-persistent-volume-claim
+      accessMode: ReadWriteOnce
+      storage: 500Mi
+  config:
+    name: db-configmap
+    data:
+       - key: POSTGRES_DB
+         value: crud_db

@@ -15,14 +15,6 @@ SECRET_KEY = "5891150d329bf4e25694aead344664df52e3d68783cca99d6cbe54975b12d9ab"
 ALGORITHM= "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
-
-# async def create_resource(user: schemas.User, resource: schemas.Resource ):
-#     cursor = conn.cursor()
-#     insert_q = "INSERT INTO resource(title, user_id) VALUES (%s, %s)"
-#     cursor.execute(insert_q,(resource.title, user[0], ))
-#     conn.commit()
-#     return {"msg": "Resource created successfully"}
-
 def get_token_data(token: str = Cookie('token', secure=True, httponly=True)) -> TokenData:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

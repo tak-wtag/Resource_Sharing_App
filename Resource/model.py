@@ -20,7 +20,7 @@ resource = Table(
 resource_details = Table(
     "resource_details",meta,
     Column('id', Integer, primary_key=True),
-    Column('user_id', Integer, ForeignKey("user.id"), nullable=False),
+    Column('resource_id', Integer, ForeignKey("resource.id"), nullable=False),
     Column('link', String),
     Column('created_at', TIMESTAMP,default=func.now(), nullable=False)
 )

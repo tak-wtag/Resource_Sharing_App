@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.name }}
+  namespace: resource
+spec: 
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      component: {{ .Values.api.label }}
+  template:
+    metadata:
+      labels:
+        component: {{ .Values.api.label }}
+    spec:
+      containers:
+        - name: {{ .Values.api.container.name }}
+          image: {{ .Values.api.container.image }}
+          ports:
+            - containerPort: {{ .Values.api.container.port }}
+          envFrom:
+            - configMapRef: 
+                name: {{ .Values.api.config.name }}
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credential
+                  key: postgres_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credential
+                  key: postgres_password
