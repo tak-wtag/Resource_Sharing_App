@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Resource/Dockerfile.dev
+    networks:
+      - my-network
+    working_dir: /code
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=crud_db
+      - DB_PORT=5432
+    ports:
+      - "8000:8000"
+  postgres:
+    image: postgres:14-alpine
+    networks:
+      - my-network
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=root
+      - POSTGRES_DB=crud_db
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/usr/Downloads/prometheus/prometheus.yml
+    # Command to start Prometheus with the specified configuration file
+    command:
+      - '--config.file=/usr/Downloads/prometheus/prometheus.yml'
+networks:
+  my-network:
+    driver: bridge
+
+
+
+
+  
