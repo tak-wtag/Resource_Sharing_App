@@ -10,11 +10,11 @@ receivers:
   #     smarthost: smtp.gmail.com:587
   #     auth_username: 'taslimajoty14@gmail.com'
   #     auth_identity: 'taslimajoty14@gmail.com'
-  #     auth_password: ' '
+  #     auth_password: 'xxx'
   - name: 'slack-notifications'
     slack_configs:
     - channel: 'prom-alert-joty'
-      api_url: ' '
+      api_url: ' xxx'
       text: 'Node Exporter down'
 
 
