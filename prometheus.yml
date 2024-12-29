@@ -9,11 +9,11 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - localhost:9093
+          - docker.for.mac.localhost:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-  # - "rules/myrules.yml"
+  - "myrules.yml"
   # - "second_rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
@@ -33,7 +33,7 @@ scrape_configs:
       # scheme defaults to 'http'.
   
     static_configs:
-        - targets: ["localhost:9100"]
+        - targets: ["docker.for.mac.localhost:9100"]
   - job_name: "node_exporter3"
 
         # metrics_path defaults to '/metrics'

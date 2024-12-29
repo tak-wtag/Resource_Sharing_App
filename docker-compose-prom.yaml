@@ -34,10 +34,22 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/usr/Downloads/prometheus/prometheus.yml
+      - ./prometheus.yml:/usr/resource_sharing_app/prometheus.yml
+      - ./myrules.yml:/usr/resource_sharing_app/myrules.yml
     # Command to start Prometheus with the specified configuration file
     command:
-      - '--config.file=/usr/Downloads/prometheus/prometheus.yml'
+      - '--config.file=/usr/resource_sharing_app/prometheus.yml'
+  alertmanager:
+    image: prom/alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - "./alertmanager:/usr/Downloads/alertmanager"
+      - "./alertmanager-data:/usr/Downloads/alertmanager/data"
+      - "./alertmanager.yml:/usr/resource_sharing_app/alertmanager.yml"
+    command: '--config.file=/usr/resource_sharing_app/alertmanager.yml --log.level=debug' 
+
 networks:
   my-network:
     driver: bridge
