@@ -13,7 +13,7 @@ receivers:
   #     auth_password: ' '
   - name: 'slack-notifications'
     slack_configs:
-    - channel: 'prom-alert-joty'
+    - channel: '#prom-alert-joty'
       api_url: ' '
       text: 'Node Exporter down'
 

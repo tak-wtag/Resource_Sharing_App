@@ -11,6 +11,7 @@ services:
     working_dir: /code
     depends_on:
       - postgres
+      - redis
     restart: on-failure
     environment:
       - DB_HOST=postgres
@@ -20,6 +21,22 @@ services:
       - DB_PORT=5432
     ports:
       - "8000:8000"
+  redis:
+    image: redis:latest
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    command: redis-server
+    volumes:
+      - ~/apps/cache:/data
+    networks:
+      - my-network-db
+    environment:
+      - REDIS_SERVER=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+
+  
   postgres:
     image: postgres:14-alpine
     networks:
