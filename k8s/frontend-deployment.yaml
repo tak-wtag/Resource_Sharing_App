@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: resource-sharing-app-frontend
-          image: joty46/resource_sharing_app-frontend:v34
+          image: asia-south2-docker.pkg.dev/fit-brand-447203-e1/myapp/frontend:v1
           ports:
-            - containerPort: 3000
+            - containerPort: 3030
 
       

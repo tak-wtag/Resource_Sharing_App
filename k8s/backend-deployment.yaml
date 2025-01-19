@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: resource-sharing-app-backend
-          image: joty46/resource_sharing_app-backend:v34
+          image: asia-south2-docker.pkg.dev/fit-brand-447203-e1/myapp/backend:latest 
           ports:
             - containerPort: 8000
           envFrom:

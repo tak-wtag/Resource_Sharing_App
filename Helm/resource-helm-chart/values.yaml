@@ -1,17 +1,17 @@
 api:
-  name: backend-deployment
+  name: backend-deployment-helm
   replicaCount: 1
   label: app
   container:
     name: resource-sharing-app-backend
-    image: joty46/resource_sharing_app-backend:v34
+    image: asia-south2-docker.pkg.dev/fit-brand-447203-e1/myapp/backend:latest
     port: 8000
   service:
-    name: backend-cluster-ip-service
+    name: backend-cluster-ip-service-helm
     type: ClusterIP
     port: 8000
   config:
-    name: backend-configmap
+    name: backend-configmap-helm
     data:
        - key: DB_USER
          value: postgres

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv
+spec:
+  storageClassName: standard-rwo
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    name: db-persistent-volume-claim
+    namespace: resource
+  csi:
+    driver: pd.csi.storage.gke.io #kubernetes.io/gce-pd
+    volumeHandle: projects/fit-brand-447203-e1/regions/asia-south2/disks/postgres-disk
+    fsType: ext4

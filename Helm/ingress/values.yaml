@@ -1,5 +1,5 @@
 ingress:
-  name: ingress-service-resource
+  name: ingress-service-resource-helm
   replicaCount: 1
   class: nginx
   rules:
@@ -9,6 +9,6 @@ ingress:
           type: Prefix
           backend:
             service:
-              name: frontend-cluster-ip-service
+              name: frontend-cluster-ip-service-helm
               port:
-                number: 3000
+                number: 3030

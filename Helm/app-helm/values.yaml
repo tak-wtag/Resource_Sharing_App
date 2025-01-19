@@ -1,12 +1,12 @@
 app:
-  name: frontend-deployment
+  name: frontend-deployment-helm
   replicaCount: 1
   label: web
   container:
     name: resource-sharing-app-frontend
-    image: joty46/resource_sharing_app-frontend:v34
-    port: 3000
+    image: asia-south2-docker.pkg.dev/fit-brand-447203-e1/myapp/frontend:v2
+    port: 3030
   service:
-    name: frontend-cluster-ip-service
+    name: frontend-cluster-ip-service-helm
     type: ClusterIP
-    port: 3000
+    port: 3030
