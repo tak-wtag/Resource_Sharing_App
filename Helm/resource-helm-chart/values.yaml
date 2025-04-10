@@ -13,9 +13,13 @@ api:
   config:
     name: backend-configmap
     data:
+       - key: DB_USER
+         value: postgres
+       - key: DB_PASSWORD
+         value: supersecretpassword
        - key: DB_NAME
          value: crud_db
        - key: DB_PORT
          value: 5432
        - key: DB_HOST
-         value: db-cluster-ip-service
+         value: db-release-postgresql.resource.svc.cluster.local

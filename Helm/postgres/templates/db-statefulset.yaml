@@ -30,15 +30,3 @@ spec:
           envFrom:
             - configMapRef: 
                 name: {{ .Values.postgres.config.name }}
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-credential
-                  key: postgres_user
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-credential
-                  key: postgres_password
-

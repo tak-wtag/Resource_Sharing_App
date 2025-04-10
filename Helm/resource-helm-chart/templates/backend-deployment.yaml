@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.api.name }}
-  namespace: resource
 spec: 
   replicas: {{ .Values.api.replicaCount }}
   selector:
@@ -21,14 +20,4 @@ spec:
           envFrom:
             - configMapRef: 
                 name: {{ .Values.api.config.name }}
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-credential
-                  key: postgres_user
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-credential
-                  key: postgres_password
+          

@@ -7,7 +7,6 @@ app:
     image: joty46/resource_sharing_app-frontend:v34
     port: 3000
   service:
-    name: frontend-node-port
-    type: NodePort
+    name: frontend-cluster-ip-service
+    type: ClusterIP
     port: 3000
-    nodePort: 31000

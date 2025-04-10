@@ -14,6 +14,7 @@ from schemas import User, Token, Resource, Resource_details, TokenData
 import json
 from sqlalchemy.exc import NoResultFound
 from fastapi.middleware.cors import CORSMiddleware
+from db import redis_client
 
 
 router = APIRouter(
@@ -171,6 +172,32 @@ def read_all_resource():
     else:
         return {"msg": "Data not available"}
 
+def get_resource_from_db(resource_id):
+    """Fetch user details from PostgreSQL."""
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM resource WHERE id = {resource_id};")
+    resource = cur.fetchone()
+    return resource
+
+@router.get("/resource/{resource_id}")
+def get_resource(resource_id):
+    """Fetch user details from Redis cache or PostgreSQL."""
+    # Check if the user is in Redis cache
+    cache_key = f"resource:{resource_id}"
+    cached_resource = redis_client.get(cache_key)
+    
+    if cached_resource:
+        print("Fetching from Redis Cache...")
+        return json.loads(cached_resource)
+    else:
+        # If not in cache, fetch from PostgreSQL and cache the result
+        print("Fetching from PostgreSQL...")
+        resource = get_resource_from_db(resource_id)
+        if resource:
+            resource_list = {"id":resource[0] , "title": resource[1], "user_id": resource[2]}
+            redis_client.setex(cache_key, 600, json.dumps(resource_list))
+        return resource 
+
 @router.get("/resource_details")
 def read_all_resource_details():
     cursor = conn.cursor()
@@ -186,3 +213,28 @@ def read_all_resource_details():
     else:
         return {"msg": "Data not available"}
     
+def get_resource_details_from_db(resource_id):
+    """Fetch user details from PostgreSQL."""
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM resource_details WHERE id = {resource_id};")
+    resource = cur.fetchone()
+    return resource
+
+@router.get("/resource_details/{resource_id}")
+def get_resource_details(resource_id):
+    """Fetch user details from Redis cache or PostgreSQL."""
+    # Check if the user is in Redis cache
+    cache_key = f"resource_details:{resource_id}"
+    cached_resource = redis_client.get(cache_key)
+    
+    if cached_resource:
+        print("Fetching from Redis Cache...")
+        return json.loads(cached_resource)
+    else:
+        # If not in cache, fetch from PostgreSQL and cache the result
+        print("Fetching from PostgreSQL...")
+        resource = get_resource_details_from_db(resource_id)
+        if resource:
+            resource_list = {"id":resource[0] , "resource_id": resource[1], "link": resource[2]}
+            redis_client.setex(cache_key, 600, json.dumps(resource_list))
+        return resource  

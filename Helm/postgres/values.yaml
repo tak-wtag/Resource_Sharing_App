@@ -22,3 +22,7 @@ postgres:
     data:
        - key: POSTGRES_DB
          value: crud_db
+       - key: POSTGRES_USER
+         value: postgres
+       - key: POSTGRES_PASSWORD
+         value: supersecretpassword

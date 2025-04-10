@@ -1,13 +1,11 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: {{ .Values.app.service.name }}
-  namespace: resource
 spec:
   type: {{ .Values.app.service.type }}
   selector:
-    component: web
+    component: {{ .Values.app.label }}
   ports:
     - port: {{ .Values.app.service.port }}
       targetPort: {{ .Values.app.service.port }}
-      nodePort: {{ .Values.app.service.nodePort }}

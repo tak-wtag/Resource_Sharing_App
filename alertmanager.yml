@@ -1,0 +1,20 @@
+route:
+  # receiver: admin
+  receiver: 'slack-notifications'
+  
+receivers:
+  # - name: admin
+  #   email_configs:
+  #   - to: 'taslima.joty@welldev.io'
+  #     from: 'taslimajoty14@gmail.com'
+  #     smarthost: smtp.gmail.com:587
+  #     auth_username: 'taslimajoty14@gmail.com'
+  #     auth_identity: 'taslimajoty14@gmail.com'
+  #     auth_password: ' '
+  - name: 'slack-notifications'
+    slack_configs:
+    - channel: '#prom-alert-joty'
+      api_url: ' '
+      text: 'Node Exporter down'
+
+
